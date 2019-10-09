@@ -67,7 +67,6 @@ module Zipline
               writer_for_file << chunk
             end
           end
-          c.perform
         elsif file[:file]
           IO.copy_stream(file[:file], writer_for_file)
           file[:file].close
