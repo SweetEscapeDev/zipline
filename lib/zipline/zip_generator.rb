@@ -60,11 +60,11 @@ module Zipline
     def write_file(streamer, file, name)
       streamer.write_deflated_file(name) do |writer_for_file|
         if file[:url]
-          the_remote_url = file[:url]
-          c = Curl::Easy.new(the_remote_url) do |curl|
-            curl.on_body do |data|
-              writer_for_file << data
-              data.bytesize
+          the_remote_uri = URI(file[:url])
+
+          Net::HTTP.get_response(the_remote_uri) do |response|
+            response.read_body do |chunk|
+              writer_for_file << chunk
             end
           end
           c.perform
